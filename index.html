@@ -1,0 +1,172 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Mina's Kite Words</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap">
+<style>
+/* Layout: one centered play card on a sky ground; big tap targets for small hands */
+:root {
+  --sky: #dff1fb;
+  --card: #ffffff;
+  --ink: #1f2a44;
+  --muted: #55627f;
+  --kite: #e4483a;
+  --kite-ink: #ffffff;
+  --grass: #2f9e5b;
+  --grass-bg: #dff5e7;
+  --oops: #c2410c;
+  --oops-bg: #ffe9dc;
+  --line: #c6d9e8;
+  --f-display: "Fredoka", "Trebuchet MS", system-ui, sans-serif;
+  --f-body: "Nunito", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --sky: #14213d; --card: #1e2d52; --ink: #f2f6ff; --muted: #b3c0de;
+    --kite: #ff6b5b; --kite-ink: #1b1030; --grass: #66d194; --grass-bg: #17402c;
+    --oops: #ffa571; --oops-bg: #4a2a18; --line: #3a4d7c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --sky: #14213d; --card: #1e2d52; --ink: #f2f6ff; --muted: #b3c0de;
+  --kite: #ff6b5b; --kite-ink: #1b1030; --grass: #66d194; --grass-bg: #17402c;
+  --oops: #ffa571; --oops-bg: #4a2a18; --line: #3a4d7c; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--sky); color: var(--ink); font-family: var(--f-body); font-size: 18px; line-height: 1.45;
+  padding-block: 20px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+main { max-width: 620px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+h1 { font-family: var(--f-display); font-size: 1.7rem; margin: 0; line-height: 1.1; text-wrap: balance; }
+.score { font-family: var(--f-display); font-weight: 600; background: var(--card); border: 2px solid var(--line); border-radius: 999px; padding: 4px 14px; font-variant-numeric: tabular-nums; }
+.bar { height: 12px; background: var(--card); border: 2px solid var(--line); border-radius: 999px; overflow: hidden; }
+.bar > i { display: block; height: 100%; width: 0; background: var(--kite); transition: width .3s; }
+.card { background: var(--card); border: 2px solid var(--line); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.tag { font-family: var(--f-display); text-transform: uppercase; letter-spacing: .08em; font-size: .8rem; color: var(--muted); margin: 0; }
+.prompt { font-family: var(--f-display); font-size: 1.5rem; line-height: 1.3; margin: 0; text-wrap: balance; }
+.prompt b { color: var(--kite); border-bottom: 4px solid var(--kite); }
+.choices { display: grid; gap: 10px; }
+.choice {
+  font: inherit; font-family: var(--f-display); font-size: 1.3rem; font-weight: 600; text-align: left;
+  min-height: 56px; padding: 10px 16px; border-radius: 14px; border: 3px solid var(--line);
+  background: var(--card); color: var(--ink); cursor: pointer;
+}
+.choice:hover:not(:disabled) { border-color: var(--kite); }
+.choice:focus-visible, .btn:focus-visible, .say:focus-visible { outline: 4px solid var(--kite); outline-offset: 2px; }
+.choice.right { background: var(--grass-bg); border-color: var(--grass); }
+.choice.wrong { background: var(--oops-bg); border-color: var(--oops); }
+.choice:disabled { cursor: default; }
+.note { min-height: 1.5em; margin: 0; font-weight: 800; }
+.note.good { color: var(--grass); }
+.note.bad { color: var(--oops); }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.btn {
+  font-family: var(--f-display); font-size: 1.2rem; font-weight: 600; padding: 10px 22px; min-height: 48px;
+  border-radius: 999px; border: 0; background: var(--kite); color: var(--kite-ink); cursor: pointer;
+}
+.say { font: inherit; font-weight: 800; min-height: 40px; padding: 4px 14px; border-radius: 999px; border: 2px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; }
+.stars { font-size: 2.4rem; letter-spacing: .1em; margin: 0; color: var(--kite); }
+.words { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.words li { background: var(--sky); border-radius: 999px; padding: 4px 14px; font-family: var(--f-display); font-weight: 600; }
+@media (prefers-reduced-motion: reduce) { .bar > i { transition: none; } }
+</style>
+
+<main>
+  <header>
+    <h1>Mina's Kite Words</h1>
+    <div class="score" id="score" aria-live="polite">Stars: 0</div>
+  </header>
+  <div class="bar" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="10" id="barwrap"><i id="bar"></i></div>
+  <section class="card" id="play"></section>
+</main>
+
+<script>
+var WORDS = {
+  enormous: "very, very big",
+  brave: "not afraid, even when something is scary",
+  gentle: "soft and kind, not rough",
+  whisper: "to talk very quietly",
+  curious: "wanting to learn or find out about something"
+};
+var ROUNDS = [
+  {type:"meaning", word:"enormous"}, {type:"blank", word:"brave", s:"The firefighter was ___ and helped the kitten."},
+  {type:"meaning", word:"gentle"},   {type:"blank", word:"whisper", s:"The library is quiet, so I ___ to my friend."},
+  {type:"meaning", word:"curious"},  {type:"blank", word:"enormous", s:"An elephant is an ___ animal."},
+  {type:"meaning", word:"whisper"},  {type:"blank", word:"gentle", s:"Be ___ when you pet the baby bunny."},
+  {type:"meaning", word:"brave"},    {type:"blank", word:"curious", s:"I am ___ about how seeds grow into plants."}
+];
+var keys = Object.keys(WORDS);
+var i = 0, stars = 0, done = false;
+var play = document.getElementById("play");
+
+function shuffle(a) { a = a.slice(); for (var k = a.length - 1; k > 0; k--) { var j = Math.floor(Math.random() * (k + 1)); var t = a[k]; a[k] = a[j]; a[j] = t; } return a; }
+function say(text) { try { if (window.speechSynthesis) { speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(text); u.rate = 0.85; speechSynthesis.speak(u); } } catch (e) {} }
+function setProgress() {
+  document.getElementById("bar").style.width = (i / ROUNDS.length * 100) + "%";
+  document.getElementById("barwrap").setAttribute("aria-valuenow", i);
+  document.getElementById("score").textContent = "Stars: " + stars;
+}
+
+function render() {
+  setProgress();
+  if (i >= ROUNDS.length) return finish();
+  var r = ROUNDS[i], answered = false;
+  var others = shuffle(keys.filter(function (k) { return k !== r.word; })).slice(0, 2);
+  var opts = shuffle([r.word].concat(others));
+  var optLabels = r.type === "meaning" ? opts.map(function (w) { return w; }) : opts;
+  var promptHtml, spoken, tag;
+  if (r.type === "meaning") {
+    tag = "Question " + (i + 1) + " of 10: What does it mean?";
+    promptHtml = "<b>" + r.word + "</b> means ...";
+    spoken = r.word;
+    // for meaning rounds, choices are meanings
+    optLabels = opts.map(function (w) { return WORDS[w]; });
+  } else {
+    tag = "Question " + (i + 1) + " of 10: Pick the missing word";
+    promptHtml = r.s.replace("___", "<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>");
+    spoken = r.s.replace("___", "blank");
+  }
+  play.innerHTML = '<p class="tag">' + tag + '</p>' +
+    '<p class="prompt">' + promptHtml + '</p>' +
+    '<div class="row"><button class="say" id="say" type="button">Read it to me</button></div>' +
+    '<div class="choices" id="choices"></div>' +
+    '<p class="note" id="note" aria-live="polite"></p>' +
+    '<div class="row"><button class="btn" id="next" type="button" hidden>Next</button></div>';
+  document.getElementById("say").onclick = function () { say(spoken); };
+  var box = document.getElementById("choices");
+  opts.forEach(function (w, n) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "choice"; b.textContent = optLabels[n];
+    b.onclick = function () {
+      if (answered) return; answered = true;
+      var ok = w === r.word, note = document.getElementById("note");
+      Array.prototype.forEach.call(box.children, function (c, m) { c.disabled = true; if (opts[m] === r.word) c.classList.add("right"); });
+      if (ok) { stars++; note.className = "note good"; note.textContent = "Yes! Great job!"; }
+      else { b.classList.add("wrong"); note.className = "note bad"; note.textContent = "Good try! The answer is " + (r.type === "meaning" ? '"' + WORDS[r.word] + '".' : '"' + r.word + '".'); }
+      setProgress();
+      var nx = document.getElementById("next"); nx.hidden = false; nx.textContent = i === ROUNDS.length - 1 ? "See my stars" : "Next"; nx.focus();
+    };
+    box.appendChild(b);
+  });
+  document.getElementById("next").onclick = function () { i++; render(); };
+}
+
+function finish() {
+  var full = "";
+  for (var k = 0; k < 5; k++) full += k < Math.round(stars / 2) ? "★" : "☆";
+  var msg = stars >= 9 ? "Amazing! You know all the kite words!" : stars >= 6 ? "Great work! Try again to get more stars." : "Nice try! Read the story again and play once more.";
+  play.innerHTML = '<p class="tag">All done</p><p class="stars" aria-label="' + Math.round(stars / 2) + ' out of 5 stars">' + full + '</p>' +
+    '<p class="prompt">You got ' + stars + ' out of 10!</p><p style="margin:0">' + msg + '</p>' +
+    '<ul class="words">' + keys.map(function (w) { return "<li>" + w + "</li>"; }).join("") + '</ul>' +
+    '<div class="row"><button class="btn" id="again" type="button">Play again</button></div>';
+  document.getElementById("again").onclick = function () { i = 0; stars = 0; render(); };
+  document.getElementById("again").focus();
+}
+render();
+</script>
+
+</body></html>
